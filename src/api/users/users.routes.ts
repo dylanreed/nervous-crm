@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { prisma } from '../../db/client';
-import { authMiddleware } from '../../lib/auth';
-import { updateProfileSchema, type UpdateProfileInput } from '../../shared/schemas';
+import { prisma } from '../../db/client.js';
+import { authMiddleware } from '../../lib/auth.js';
+import { updateProfileSchema, type UpdateProfileInput } from '../../shared/schemas/index.js';
 
 export async function usersRoutes(fastify: FastifyInstance): Promise<void> {
   // All routes require authentication

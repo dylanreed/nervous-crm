@@ -1,6 +1,6 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import type { Prisma } from '@prisma/client';
-import type { CreateContactInput, UpdateContactInput, ContactQuery } from '../shared/schemas';
+import type { CreateContactInput, UpdateContactInput, ContactQuery } from '../shared/schemas/index.js';
 
 export class ContactService {
   async list(teamId: string, query: ContactQuery) {

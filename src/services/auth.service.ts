@@ -1,13 +1,13 @@
-import { prisma } from '../db/client';
-import { hashPassword, verifyPassword } from '../lib/password';
+import { prisma } from '../db/client.js';
+import { hashPassword, verifyPassword } from '../lib/password.js';
 import {
   createAccessToken,
   createRefreshToken,
   verifyRefreshToken,
   getRefreshTokenExpiry,
-} from '../lib/jwt';
+} from '../lib/jwt.js';
 import type { Role } from '@prisma/client';
-import type { RegisterInput, LoginInput, AcceptInviteInput } from '../shared/schemas';
+import type { RegisterInput, LoginInput, AcceptInviteInput } from '../shared/schemas/index.js';
 
 export interface AuthTokens {
   accessToken: string;

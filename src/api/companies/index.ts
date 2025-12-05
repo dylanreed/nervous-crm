@@ -1,1 +1,1 @@
-export { companiesRoutes } from './companies.routes';
+export { companiesRoutes } from './companies.routes.js';

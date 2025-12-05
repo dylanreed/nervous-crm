@@ -3,13 +3,13 @@ import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
-import { authRoutes } from './api/auth';
-import { usersRoutes } from './api/users';
-import { teamsRoutes } from './api/teams';
-import { companiesRoutes } from './api/companies';
-import { contactsRoutes } from './api/contacts';
-import { dealsRoutes } from './api/deals';
-import { activitiesRoutes } from './api/activities';
+import { authRoutes } from './api/auth/index.js';
+import { usersRoutes } from './api/users/index.js';
+import { teamsRoutes } from './api/teams/index.js';
+import { companiesRoutes } from './api/companies/index.js';
+import { contactsRoutes } from './api/contacts/index.js';
+import { dealsRoutes } from './api/deals/index.js';
+import { activitiesRoutes } from './api/activities/index.js';
 
 const fastify = Fastify({
   logger: true,

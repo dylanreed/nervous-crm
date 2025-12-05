@@ -1,1 +1,1 @@
-export { teamsRoutes } from './teams.routes';
+export { teamsRoutes } from './teams.routes.js';

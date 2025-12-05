@@ -1,6 +1,6 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import type { Prisma } from '@prisma/client';
-import type { CreateCompanyInput, UpdateCompanyInput, CompanyQuery } from '../shared/schemas';
+import type { CreateCompanyInput, UpdateCompanyInput, CompanyQuery } from '../shared/schemas/index.js';
 
 export class CompanyService {
   async list(teamId: string, query: CompanyQuery) {

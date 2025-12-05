@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { Role } from '@prisma/client';
-import { verifyAccessToken } from './jwt';
+import { verifyAccessToken } from './jwt.js';
 
 export interface AuthContext {
   userId: string;

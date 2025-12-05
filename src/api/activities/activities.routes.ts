@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authMiddleware } from '../../lib/auth';
-import { activityService } from '../../services/activity.service';
+import { authMiddleware } from '../../lib/auth.js';
+import { activityService } from '../../services/activity.service.js';
 import {
   createActivitySchema,
   updateActivitySchema,
   activityQuerySchema,
   type CreateActivityInput,
   type UpdateActivityInput,
-} from '../../shared/schemas';
+} from '../../shared/schemas/index.js';
 
 export async function activitiesRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.addHook('preHandler', authMiddleware);

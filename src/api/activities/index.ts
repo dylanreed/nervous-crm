@@ -1,1 +1,1 @@
-export { activitiesRoutes } from './activities.routes';
+export { activitiesRoutes } from './activities.routes.js';

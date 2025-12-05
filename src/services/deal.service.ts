@@ -1,6 +1,6 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import type { Prisma, DealStage } from '@prisma/client';
-import type { CreateDealInput, UpdateDealInput, DealQuery } from '../shared/schemas';
+import type { CreateDealInput, UpdateDealInput, DealQuery } from '../shared/schemas/index.js';
 
 export class DealService {
   async list(teamId: string, query: DealQuery) {

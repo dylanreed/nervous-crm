@@ -1,6 +1,6 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import type { Prisma, ActivityType } from '@prisma/client';
-import type { CreateActivityInput, UpdateActivityInput, ActivityQuery } from '../shared/schemas';
+import type { CreateActivityInput, UpdateActivityInput, ActivityQuery } from '../shared/schemas/index.js';
 
 export class ActivityService {
   async list(teamId: string, query: ActivityQuery) {

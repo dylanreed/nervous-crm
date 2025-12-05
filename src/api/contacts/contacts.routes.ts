@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authMiddleware } from '../../lib/auth';
-import { contactService } from '../../services/contact.service';
+import { authMiddleware } from '../../lib/auth.js';
+import { contactService } from '../../services/contact.service.js';
 import {
   createContactSchema,
   updateContactSchema,
   contactQuerySchema,
   type CreateContactInput,
   type UpdateContactInput,
-} from '../../shared/schemas';
+} from '../../shared/schemas/index.js';
 
 export async function contactsRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.addHook('preHandler', authMiddleware);

@@ -1,1 +1,1 @@
-export { contactsRoutes } from './contacts.routes';
+export { contactsRoutes } from './contacts.routes.js';

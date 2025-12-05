@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authMiddleware, requireRole } from '../../lib/auth';
-import { teamService, TeamError } from '../../services/team.service';
-import { inviteUserSchema, type InviteUserInput } from '../../shared/schemas';
+import { authMiddleware, requireRole } from '../../lib/auth.js';
+import { teamService, TeamError } from '../../services/team.service.js';
+import { inviteUserSchema, type InviteUserInput } from '../../shared/schemas/index.js';
 import { z } from 'zod';
 
 export async function teamsRoutes(fastify: FastifyInstance): Promise<void> {

@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authMiddleware } from '../../lib/auth';
-import { companyService } from '../../services/company.service';
+import { authMiddleware } from '../../lib/auth.js';
+import { companyService } from '../../services/company.service.js';
 import {
   createCompanySchema,
   updateCompanySchema,
   companyQuerySchema,
   type CreateCompanyInput,
   type UpdateCompanyInput,
-} from '../../shared/schemas';
+} from '../../shared/schemas/index.js';
 
 export async function companiesRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.addHook('preHandler', authMiddleware);

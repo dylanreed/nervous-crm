@@ -1,1 +1,1 @@
-export { dealsRoutes } from './deals.routes';
+export { dealsRoutes } from './deals.routes.js';

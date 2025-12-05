@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authService, AuthError } from '../../services/auth.service';
+import { authService, AuthError } from '../../services/auth.service.js';
 import {
   registerSchema,
   loginSchema,
@@ -7,7 +7,7 @@ import {
   type RegisterInput,
   type LoginInput,
   type AcceptInviteInput,
-} from '../../shared/schemas';
+} from '../../shared/schemas/index.js';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,

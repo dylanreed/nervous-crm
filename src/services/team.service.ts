@@ -1,7 +1,7 @@
-import { prisma } from '../db/client';
+import { prisma } from '../db/client.js';
 import { randomBytes } from 'crypto';
 import type { Role } from '@prisma/client';
-import type { InviteUserInput } from '../shared/schemas';
+import type { InviteUserInput } from '../shared/schemas/index.js';
 
 export class TeamService {
   async getTeam(teamId: string) {

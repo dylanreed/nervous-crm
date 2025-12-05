@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { authMiddleware } from '../../lib/auth';
-import { dealService } from '../../services/deal.service';
+import { authMiddleware } from '../../lib/auth.js';
+import { dealService } from '../../services/deal.service.js';
 import {
   createDealSchema,
   updateDealSchema,
   dealQuerySchema,
   type CreateDealInput,
   type UpdateDealInput,
-} from '../../shared/schemas';
+} from '../../shared/schemas/index.js';
 
 export async function dealsRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.addHook('preHandler', authMiddleware);
