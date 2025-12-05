@@ -1,4 +1,6 @@
-const API_BASE = '/api/v1';
+const API_BASE = import.meta.env.PROD
+  ? 'https://nevous-crm.fly.dev/api/v1'
+  : '/api/v1';
 
 class ApiClient {
   private async request<T>(method: string, path: string, data?: unknown): Promise<T> {
