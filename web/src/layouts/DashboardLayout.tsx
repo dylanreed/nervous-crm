@@ -26,7 +26,7 @@ export function DashboardLayout() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
@@ -37,15 +37,15 @@ export function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-background">
       {/* Sidebar */}
-      <aside className="w-64 bg-card border-r flex flex-col">
-        <div className="p-6">
+      <aside className="w-64 bg-card shadow-lg flex flex-col">
+        <div className="p-6 border-b border-border">
           <h1 className="text-xl font-bold text-primary">Nevous CRM</h1>
           <p className="text-sm text-muted-foreground mt-1">{user.teamName}</p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1">
+        <nav className="flex-1 px-4 py-4 space-y-1">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href ||
               (item.href !== '/' && location.pathname.startsWith(item.href));
@@ -55,10 +55,10 @@ export function DashboardLayout() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all',
                   isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -68,15 +68,15 @@ export function DashboardLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t">
+        <div className="p-4 border-t border-border bg-[hsl(48,100%,53%)]">
           <div className="flex items-center gap-3 px-3 py-2">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+              <p className="text-sm font-semibold text-foreground truncate">{user.name}</p>
+              <p className="text-xs text-foreground/70 truncate">{user.email}</p>
             </div>
             <button
               onClick={() => logout()}
-              className="p-2 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
+              className="p-2 text-foreground/70 hover:text-foreground rounded-lg hover:bg-black/10 transition-colors"
               title="Log out"
             >
               <LogOut className="h-4 w-4" />

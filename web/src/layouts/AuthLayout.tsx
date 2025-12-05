@@ -6,7 +6,7 @@ export function AuthLayout() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
@@ -17,12 +17,28 @@ export function AuthLayout() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
-      <div className="w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary">Nevous CRM</h1>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-full max-w-md">
+        <div className="bg-card rounded-xl shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-primary">Nevous CRM</h1>
+            <p className="text-muted-foreground mt-2">Manage your community relationships</p>
+          </div>
+          <Outlet />
         </div>
-        <Outlet />
+        <div className="mt-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Powered by{' '}
+            <a
+              href="https://www.nervous.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-semibold"
+            >
+              nervous
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
