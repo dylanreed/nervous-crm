@@ -16,9 +16,9 @@ Sales/business CRM for small teams with a clear path to enterprise scale. Web ap
 |-------|------------|
 | Backend | Fastify, TypeScript |
 | Database | PostgreSQL (Fly Postgres) |
-| ORM | Drizzle |
+| ORM | Prisma |
 | Validation | Zod |
-| Auth | Lucia + Arctic |
+| Auth | Manual sessions (JWT + Argon2) |
 | Frontend | React 18, Vite |
 | Routing | React Router |
 | State | TanStack Query |
@@ -92,56 +92,60 @@ nevous-crm/
 
 ## API Design
 
-RESTful API at `/api/v1/{resource}`.
+RESTful API at `/api/v1/` with flat routes and query filters.
 
-| Endpoint | Methods | Description |
-|----------|---------|-------------|
-| `/api/v1/contacts` | GET, POST | List/create contacts |
-| `/api/v1/contacts/:id` | GET, PUT, DELETE | Single contact operations |
-| `/api/v1/contacts/:id/activities` | GET, POST | Activities for a contact |
-| `/api/v1/companies` | GET, POST | List/create companies |
-| `/api/v1/companies/:id/contacts` | GET | Contacts at a company |
-| `/api/v1/deals` | GET, POST | List/create deals |
-| `/api/v1/deals/:id/activities` | GET, POST | Activities for a deal |
-| `/api/v1/activities` | GET, POST | List/create activities |
-| `/api/v1/auth/*` | POST | Login, register, OAuth callbacks |
-| `/api/v1/users/me` | GET, PUT | Current user profile |
+| Resource | Endpoints |
+|----------|-----------|
+| **Auth** | `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `POST /auth/refresh` |
+| **Users** | `GET /users/me`, `PUT /users/me` |
+| **Teams** | `GET /teams/me`, `PUT /teams/me`, `POST /teams/invite`, `GET /teams/members` |
+| **Companies** | `GET /companies`, `POST /companies`, `GET /companies/:id`, `PUT /companies/:id`, `DELETE /companies/:id` |
+| **Contacts** | `GET /contacts`, `POST /contacts`, `GET /contacts/:id`, `PUT /contacts/:id`, `DELETE /contacts/:id` |
+| **Deals** | `GET /deals`, `POST /deals`, `GET /deals/:id`, `PUT /deals/:id`, `DELETE /deals/:id` |
+| **Activities** | `GET /activities`, `POST /activities`, `GET /activities/:id`, `PUT /activities/:id`, `DELETE /activities/:id` |
 
 ### Conventions
 
-- **Filtering:** `?stage=negotiation&owner_id=123`
-- **Sorting:** `?sort=-created_at` (prefix `-` for descending)
+- **Filtering:** `?stage=negotiation&ownerId=123`
+- **Sorting:** `?sort=-createdAt` (prefix `-` for descending)
 - **Pagination:** `?limit=50&cursor=abc123` (cursor-based)
 - **Includes:** `?include=company,activities`
-- **Auth:** JWT in `Authorization: Bearer` header
+- **Auth:** JWT in httpOnly cookies
 
 ## Authentication
 
-### Email/Password
+### Email/Password (MVP)
 1. User registers with email + password
-2. Password hashed with Argon2
-3. Session created, JWT issued
-4. JWT stored in httpOnly cookie
+2. Password hashed with Argon2 (via `@node-rs/argon2`)
+3. Session created in PostgreSQL, JWT issued
+4. Access token (15 min) + refresh token (7 days) stored in httpOnly cookies
+5. Refresh token rotated on each use
 
-### OAuth (Google/GitHub)
-1. Redirect to provider consent screen
-2. Callback with auth code → exchange for tokens
-3. Create or link user account
-4. Session created, same JWT flow
+### OAuth (v2 - Post-MVP)
+Google OAuth will be added in v2.
 
-### Session Management
-- Access token: 15 min expiry
-- Refresh token: 7 days, rotated on use
-- Sessions stored in PostgreSQL
+### Session Storage
+```
+Session: id, userId, refreshToken, expiresAt, createdAt
+```
+
+### Team Creation
+- When a user registers, they automatically get a new team as owner
+- Other users join via email invite
 
 ### Roles & Permissions
 
 ```
 owner  → full access, manage billing, delete team
-admin  → manage users, all CRUD
+admin  → manage users, invite/remove members, all CRUD
 member → CRUD own records, view team records
 viewer → read-only access
 ```
+
+### Ownership Rules
+- Contacts/Deals have `ownerId` (assigned user)
+- Members can edit their own records, view others
+- Admins/Owners can edit any record
 
 All queries automatically scoped to user's team.
 
@@ -165,16 +169,33 @@ Single deployment: Vite builds React, Fastify serves static files + API.
 ## MVP Scope (Internal Use)
 
 ### In Scope
-- Auth: Email/password + Google OAuth
-- Contacts: Full CRUD, search, filter by owner
-- Companies: Full CRUD, link contacts
-- Deals: Full CRUD, pipeline board view, stages (lead → qualified → proposal → negotiation → won/lost)
-- Activities: Create tasks/calls/meetings, mark complete, link to contacts/deals
-- Basic dashboard: Open deals, upcoming activities, recent contacts
-- Team: Invite users by email, basic roles (admin/member)
+- **Auth:** Email/password only, JWT sessions, Argon2 hashing
+- **Teams:** Auto-created on register, invite by email, roles (owner/admin/member/viewer)
+- **Companies:** Full CRUD, list with search/filter
+- **Contacts:** Full CRUD, optional company link, owner assignment
+- **Deals:** Full CRUD, pipeline board + list view with toggle, stages (lead → qualified → proposal → negotiation → won/lost)
+- **Activities:** Full CRUD, types (call/email/meeting/task), link to contact/deal, due dates, mark complete
+- **Dashboard:** Open deals summary, upcoming activities, recent contacts
+- **Settings:** User profile, team members list, invite users
+
+### Frontend Pages
+| Page | Route | Description |
+|------|-------|-------------|
+| Login | `/login` | Email/password form |
+| Register | `/register` | Create account + team |
+| Dashboard | `/` | Overview: open deals, upcoming activities, recent contacts |
+| Contacts | `/contacts` | List view with search/filter |
+| Contact Detail | `/contacts/:id` | Contact info, linked activities, deals |
+| Companies | `/companies` | List view with search/filter |
+| Company Detail | `/companies/:id` | Company info, linked contacts, deals |
+| Deals | `/deals` | Pipeline board (Kanban) + list view toggle |
+| Deal Detail | `/deals/:id` | Deal info, linked activities, contact/company |
+| Activities | `/activities` | List view, filter by type/status/due date |
+| Settings | `/settings` | User profile, team members, invite |
 
 ### Out of Scope (Post-MVP)
-- Calendar sync (Google Calendar) - first post-MVP feature
+- OAuth (Google/GitHub) - v2 feature
+- Calendar sync (Google Calendar)
 - Email integration
 - Custom fields
 - Automation/workflows

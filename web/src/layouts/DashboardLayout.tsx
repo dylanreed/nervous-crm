@@ -1,0 +1,96 @@
+import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  Handshake,
+  CheckSquare,
+  Settings,
+  LogOut,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const navigation = [
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Companies', href: '/companies', icon: Building2 },
+  { name: 'Deals', href: '/deals', icon: Handshake },
+  { name: 'Activities', href: '/activities', icon: CheckSquare },
+  { name: 'Settings', href: '/settings', icon: Settings },
+];
+
+export function DashboardLayout() {
+  const { user, isLoading, logout } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-card border-r flex flex-col">
+        <div className="p-6">
+          <h1 className="text-xl font-bold text-primary">Nevous CRM</h1>
+          <p className="text-sm text-muted-foreground mt-1">{user.teamName}</p>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-1">
+          {navigation.map((item) => {
+            const isActive = location.pathname === item.href ||
+              (item.href !== '/' && location.pathname.startsWith(item.href));
+
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{user.name}</p>
+              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+            </div>
+            <button
+              onClick={() => logout()}
+              className="p-2 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
+              title="Log out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 overflow-auto">
+        <div className="p-8">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+}
